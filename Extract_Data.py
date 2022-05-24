@@ -11,7 +11,7 @@ TRACK_DURATION = 35 # measured in seconds
 SAMPLES_PER_TRACK = SAMPLE_RATE * TRACK_DURATION
 
 def save_mfcc(dataset_path, json_path, num_mfcc=13, n_fft=2048, hop_length=512, num_segments=5):
-    """Extracts MFCCs from music dataset and saves them into a json file along witgh genre labels.
+    """Extracts MFCCs from family dataset and saves them into a json file along witgh genre labels.
 
         :param dataset_path (str): Path to dataset
         :param json_path (str): Path to json file used to save MFCCs
@@ -32,18 +32,18 @@ def save_mfcc(dataset_path, json_path, num_mfcc=13, n_fft=2048, hop_length=512, 
     samples_per_segment = int(SAMPLES_PER_TRACK / num_segments)
     num_mfcc_vectors_per_segment = math.ceil(samples_per_segment / hop_length)
 
-    # loop through all genre sub-folder
+    # loop through all family sub-folder
     for i, (dirpath, dirnames, filenames) in enumerate(os.walk(dataset_path)):
 
-        # ensure we're processing a genre sub-folder level
+        # ensure we're processing a family sub-folder level
         if dirpath is not dataset_path:
 
-            # save genre label (i.e., sub-folder name) in the mapping
+            # save family label (i.e., sub-folder name) in the mapping
             semantic_label = dirpath.split("/")[-1]
             data["mapping"].append(semantic_label)
             print("\nProcessing: {}".format(semantic_label))
 
-            # process all audio files in genre sub-dir
+            # process all audio files in family sub-dir
             for f in filenames:
 
 		# load audio file
@@ -70,4 +70,6 @@ def save_mfcc(dataset_path, json_path, num_mfcc=13, n_fft=2048, hop_length=512, 
     # save MFCCs to json file
     with open(json_path, "w") as fp:
         json.dump(data, fp, indent=4)
-        
+
+if __name__ == "__main__":
+    save_mfcc(DATASET_PATH, JSON_PATH, num_segments=7)
